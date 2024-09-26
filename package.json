@@ -12,6 +12,7 @@
   "dependencies": {
     "@tauri-apps/api": ">=2.0.0-rc.0",
     "@tauri-apps/plugin-shell": ">=2.0.0-rc.0",
+    "@tauri-apps/plugin-store": "^2.0.0-rc",
     "pinia": "^2.2.2",
     "vant": "^4.9.7",
     "vue": "^3.3.4",

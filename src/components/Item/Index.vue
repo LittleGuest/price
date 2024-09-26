@@ -1,10 +1,11 @@
 <script setup>
-import { ref } from "vue";
-import Greet from "../Greet.vue";
+import { ref, onMounted, onBeforeMount } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { Store } from "@tauri-apps/plugin-store";
 
 const router = useRouter();
 const route = useRoute();
+// Store 会在 JavaScript 绑定时自动加载。
 
 const activeNames = ref([]);
 const items = ref([
@@ -45,14 +46,19 @@ const onPlusBubbleClick = () => {
 
 const showPopupBottom = ref(false);
 
-const locationFk = ref("a");
-const itemFk = ref("");
+// 地址筛选
+const locationFk = ref("");
 const locationFkOption = [
+  { text: "默认", value: "" },
   { text: "xxx菜市场", value: "xxxcaishi" },
   { text: "xxx综合市场", value: "xxxzonghe" },
   { text: "永辉超市", value: "yonghui" },
 ];
+
+// 物品筛选
+const itemFk = ref("");
 const itemFkOption = [
+  { text: "默认", value: "" },
   { text: "土豆", value: "tudou" },
   { text: "牛肉", value: "niurou" },
   { text: "玉米", value: "yumi" },
@@ -72,31 +78,29 @@ const openAddressPage = () => {
   </van-dropdown-menu>
 
   <van-collapse v-model="activeNames">
-    <div v-for="_ in 10">
-      <van-swipe-cell
-        v-for="(item, index) in items"
-        :key="index"
-        @click="onDeleteItem"
-      >
-        <van-collapse-item icon="shop-o">
-          <template #title>{{ item.name }}</template>
-          <template #value>{{ item.price }} / {{ item.unit }}</template>
-          <van-space>
-            <van-tag
-              plain
-              type="primary"
-              v-for="(pos, index) in item.position"
-              :key="index"
-              >{{ pos }}</van-tag
-            >
-          </van-space>
-        </van-collapse-item>
+    <van-swipe-cell
+      v-for="(item, index) in items"
+      :key="index"
+      @click="onDeleteItem"
+    >
+      <van-collapse-item icon="shop-o">
+        <template #title>{{ item.name }}</template>
+        <template #value>{{ item.price }} / {{ item.unit }}</template>
+        <van-space>
+          <van-tag
+            plain
+            type="primary"
+            v-for="(pos, index) in item.position"
+            :key="index"
+            >{{ pos }}</van-tag
+          >
+        </van-space>
+      </van-collapse-item>
 
-        <template #right>
-          <van-button square text="删除" type="danger" class="delete-button" />
-        </template>
-      </van-swipe-cell>
-    </div>
+      <template #right>
+        <van-button square text="删除" type="danger" class="delete-button" />
+      </template>
+    </van-swipe-cell>
   </van-collapse>
 
   <van-floating-bubble
